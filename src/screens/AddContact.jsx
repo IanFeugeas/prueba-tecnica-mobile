@@ -7,7 +7,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-function AddContact({setRender}) {
+function AddContact() {
     const [loading, setLoading] = useState(false);
     const [name, setName] = useState(" ");
     const [lastName, setLastName] = useState(" ");
@@ -41,7 +41,7 @@ function AddContact({setRender}) {
             setLoading(false)
             alert('Contacto agregado correctamente');
             console.log('Add contact Successful')
-            setTimeout(() => navigation.navigate('Contacts'), 4000)
+            setTimeout(() => navigation.navigate('Clientes'), 4000)
         } catch (error) {
             setLoading(false)
             console.log(error)
@@ -50,7 +50,7 @@ function AddContact({setRender}) {
 
     async function handleReturn(){
         setTimeout( () => {
-            navigation.navigate('Contactos');
+            navigation.navigate('Clientes');
         }, 100)
     }
 

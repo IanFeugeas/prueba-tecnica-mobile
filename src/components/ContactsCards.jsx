@@ -46,7 +46,7 @@ function ContactsCards() {
     function handleDetails(e, id) {
         dispatch(contactClicked({state: true}))
         setTimeout( () => {
-            navigation.navigate('Details',{contactId: id});
+            navigation.navigate('Informacion',{contactId: id});
         }, 100)
     }
     function handleEdit(e, id) {
@@ -60,6 +60,10 @@ function ContactsCards() {
         setTimeout( () => {
             navigation.navigate('Agregar');
         }, 100)
+    }
+
+    function handleDelete(e){
+        
     }
 
     useEffect( () => {

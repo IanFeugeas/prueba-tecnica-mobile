@@ -1,32 +1,30 @@
 import { createReducer } from "@reduxjs/toolkit";
-import contactsActions from './actions'
+import actions from './actions'
 
-const { read_contacts, delete_contacts } = contactsActions
+
+const { read_contact, delete_contact } = actions
 
 const initialState = {
-    contacts: []
+    contact: [],
 }
 
 const reducer = createReducer(
     initialState,
     (builder) => builder
-        .addCase(
-            read_contacts.fulfilled,
+        .addCase(read_contact.fulfilled,
             (state, action) => {
                 let newState = {
                     ...state,
-                    contacts: action.payload.contacts
+                    contact: action.payload.contact
                 }
                 return newState
             }
         )
         .addCase(
-            delete_contacts.fulfilled,
+            delete_contact.fulfilled,
             (state, action) => {
-                let newContact = state.contacts.filter
                 let newState = {
-                    ...state,
-                    contacts: newContact
+                    contact: []
 
                 }
                 return newState
