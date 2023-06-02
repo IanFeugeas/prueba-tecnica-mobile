@@ -10,9 +10,7 @@ const windowHeight = Dimensions.get('window').height;
 function RegisterForm({setRender}) {
     const [loading, setLoading] = useState(false);
     const [name, setName] = useState('');
-    const [last, setLast] = useState('');
     const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('')
     const [password, setPassword] = useState('');
 
     const navigation = useNavigation()

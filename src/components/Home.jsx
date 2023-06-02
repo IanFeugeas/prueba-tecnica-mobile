@@ -23,6 +23,7 @@ function Home() {
     }, []));
 
     const navigation = useNavigation()
+    
     function navigateContactos(){
         if(token){
             navigation.navigate('Clientes');
