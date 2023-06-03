@@ -14,7 +14,7 @@ import contactClickActions from "../store/Contacts/actions"
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 
-const { read_contacts } = contactsActions
+const { read_contacts, delete_contacts } = contactsActions
 const { contactClicked } = contactClickActions
 
 function ContactsCards() {
@@ -44,26 +44,21 @@ function ContactsCards() {
     const navigation = useNavigation()
 
     function handleDetails(e, id) {
-        dispatch(contactClicked({state: true}))
-        setTimeout( () => {
-            navigation.navigate('Informacion',{contactId: id});
-        }, 100)
-    }
-    function handleEdit(e, id) {
-        dispatch(contactClicked({state: true}))
-        setTimeout( () => {
-            navigation.navigate('Editar',{contactId: id});
-        }, 100)
-    }
-    function handleAdd(e) {
-        dispatch(contactClicked({state: true}))
-        setTimeout( () => {
-            navigation.navigate('Agregar');
-        }, 100)
+            navigation.navigate('Informacion');
     }
 
-    function handleDelete(e){
-        
+    function handleEdit(id) {
+      navigation.navigate('Editar', {id});   
+    }
+
+    function handleNavigate(e) {
+            navigation.navigate('Agregar');
+    }
+
+    async function handleDelete(id){
+        const token = await AsyncStorage.getItem('token');
+        let headers = { headers: { 'Authorization': `Bearer ${token}` } }
+        dispatch(delete_contacts({id, headers}))
     }
 
     useEffect( () => {
@@ -78,7 +73,7 @@ function ContactsCards() {
                     <Text style={styles.title}> Lista de contactos</Text>
                 </View>    
                 <View style={styles.add}>
-                    <TouchableOpacity style={styles.cardBtn} onPress={(event) => handleAdd(event)}>
+                    <TouchableOpacity style={styles.cardBtn} onPress={(event) => handleNavigate(event)}>
                         <MaterialIcons name="person-add" size={40} color='#1E90FF'/>
                     </TouchableOpacity>
                 </View>    
@@ -96,13 +91,13 @@ function ContactsCards() {
                                         <Text style={styles.phone}>{contact.phone}</Text>
                                     </View>
                                     <View style={styles.bottom}>
-                                        <TouchableOpacity style={styles.cardBtn} onPress={(event) => handleEdit(event, contact._id)}>
+                                        <TouchableOpacity style={styles.cardBtn} onPress={() => handleEdit(contact._id)}>
                                             <MaterialIcons name="edit" size={20} color='#1E90FF' />
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.cardBtn} onPress={(event) => handleDetails(event, contact._id)}>
                                             <MaterialCommunityIcons name="checkbox-marked-circle-plus-outline" size={20} color='#1E90FF' />
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={styles.cardBtn} onPress={(event) => handleDelete(event, contact._id)}>
+                                        <TouchableOpacity style={styles.cardBtn} onPress={() => handleDelete(contact._id)}>
                                             <MaterialCommunityIcons name="trash-can" size={20} color='#1E90FF' />
                                         </TouchableOpacity>
                                     </View>

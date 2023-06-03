@@ -1,75 +1,97 @@
 import React, { useState } from 'react'
 import { Text, View, StyleSheet, TextInput, Image, ScrollView, Dimensions, TouchableOpacity } from "react-native";
 import axios from 'axios'
+import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from 'react-redux';
+import contactsActions from '../store/Contacts/actions'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-function EditContact({setRender}) {
+function EditContact() {
+    const { edit_contact } = contactsActions
+    const route = useRoute();
+    const contactId = route.params.id;
     const [loading, setLoading] = useState(false);
     const [name, setName] = useState(" ");
-    const [lastName, setLastName] = useState(" ");
+    const [last_name, setLastName] = useState(" ");
     const [phone, setPhone] = useState(" ")
     const [email, setEmail] = useState(" ");
     const [date, setDate] = useState(" ");
     const [address, setAddress] = useState(" ");
     const [type, setType] = useState(" ");
     const [origin, setOrigin] = useState(" ")
+    const dispatch = useDispatch()
+    let [token,setToken] = useState('')
 
     const navigation = useNavigation()
 
-    async function handleEdit() {
-        setLoading(true)
-
-        let data = {
-            name: name,
-            email: email,
-            last_name: lastName,
-            phone: phone,
-            date: date,
-            address: address,
-            type_of_contact: type,
-            origin: origin
-
+    async function handleEdit(id) {
+        console.log(id);
+        const editedData = {};
+      
+        if (name !== " ") {
+          editedData.name = name;
         }
-
-        let url = 'https://prueba-tecnica-minicrm.onrender.com/contacts/:id'
-        try {
-            await axios.post(url, data)
-            setLoading(false)
-            alert('Contacto editado correctamente');
-            console.log('Edit contact Successful')
-            setTimeout(() => navigation.navigate('Contactos'), 4000)
-        } catch (error) {
-            setLoading(false)
-            console.log(error)
+      
+        if (last_name !== " ") {
+          editedData.last_name = last_name;
         }
-    }
+      
+        if (phone !== " ") {
+          editedData.phone = phone;
+        }
+      
+        if (email !== " ") {
+          editedData.email = email;
+        }
+      
+        if (date !== " ") {
+          editedData.date = date;
+        }
+      
+        if (address !== " ") {
+          editedData.address = address;
+        }
+      
+        if (type !== " ") {
+          editedData.type = type;
+        }
+      
+        if (origin !== " ") {
+          editedData.origin = origin;
+        }
+      
+        const token = await AsyncStorage.getItem('token');
+        let headers = { headers: { 'Authorization': `Bearer ${token}` } };
+        dispatch(edit_contact({ id, body: editedData, headers }));
+        navigation.navigate("Clientes");
+      }
 
     async function handleReturn(){
-        setTimeout( () => {
-            navigation.navigate('Contactos');
-        }, 100)
+
+            navigation.navigate('Clientes')
     }
 
     return (
-        <ScrollView style={styles.register}>
-            <View style={styles.registerContent}>
+        <ScrollView style={styles.editForm}>
+            <View style={styles.editContent}>
                 <View style={styles.welcomeSection}>
                     <Text style={styles.welcomeSectionH2}>Editar contacto</Text>
                 </View>
                 <View style={styles.form}>
 
                     <View style={styles.fieldset}>
-                        <Text style={styles.legend}>Nombres *</Text>
+                        <Text style={styles.legend}>Nombres </Text>
                         <TextInput name="name" id="name" style={styles.input} onChangeText={inputText => setName(inputText)} />
                     </View>
 
                     <View style={styles.fieldset}>
-                        <Text style={styles.legend}>Apellidos *</Text>
-                        <TextInput name="lastName" id="lastName" style={styles.input} onChangeText={inputText => setLastName(inputText)} />
+                        <Text style={styles.legend}>Apellidos </Text>
+                        <TextInput name="last_name" id="last_name" style={styles.input} onChangeText={inputText => setLastName(inputText)} />
                     </View>
 
                     <View style={styles.fieldset}>
@@ -78,7 +100,7 @@ function EditContact({setRender}) {
                     </View>
 
                     <View style={styles.fieldset}>
-                        <Text style={styles.legend}>Tel/Cel *</Text>
+                        <Text style={styles.legend}>Tel/Cel </Text>
                         <TextInput name="phone" id="phone" style={styles.input} onChangeText={inputText => setPhone(inputText)} />
                     </View>
 
@@ -106,10 +128,10 @@ function EditContact({setRender}) {
                         <Text style={styles.legend}>Origen</Text>
                         <TextInput name="origin" id="origin" style={styles.input} onChangeText={inputText => setOrigin(inputText)} />
                     </View>
-                    <View>
+                    <View style={styles.btnEdit}>
                         <TouchableOpacity style={styles.add} onPress={handleReturn}><Text style={styles.addText} >Cancelar</Text ></TouchableOpacity>
 
-                        <TouchableOpacity style={styles.add} onPress={handleEdit}><Text style={styles.addText} >Guardar</Text ></TouchableOpacity>
+                        <TouchableOpacity style={styles.add} onPress={() => handleEdit(contactId)}><Text style={styles.addText} >Guardar</Text ></TouchableOpacity>
                     </View>
                     
             
@@ -123,12 +145,11 @@ function EditContact({setRender}) {
 }
 
 const styles = StyleSheet.create({
-    register: {
+    editForm: {
         width: windowWidth,
         height: windowHeight,
-        paddingTop: '50%'
     },
-    registerContent: {
+    editContent: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -194,8 +215,15 @@ const styles = StyleSheet.create({
         marginLeft: 15,
         height: 25
     },
+    btnEdit: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 50
+    },
     add: {
-        width: '100%',
+        width: 160,
         height: 48,
         backgroundColor: '#1E90FF',
         borderRadius: 10,

@@ -10,9 +10,11 @@ import Contacts from "../screens/Contacts"
 import Logout from '../screens/LogOut';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import {AntDesign} from '@expo/vector-icons'; 
 import AddContact from '../screens/AddContact';
 import EditContact from '../screens/EditContact';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const Tab = createBottomTabNavigator()
 
@@ -85,13 +87,13 @@ function BottomTabsNavigation() {
                 ),
             }} name='Informacion' component={ContactDetails} /> : <></>}
 
-            {token && contactClicked ? <Tab.Screen options={{
+            {token ? <Tab.Screen options={{
                 headerShown: false, tabBarIcon: ({ color, size }) => (
                     <MaterialIcons name="person-add" size={24} color="white" />
                 ),
             }} name='Agregar' component={AddContact} /> : <></>}
 
-            {token && contactClicked ? <Tab.Screen options={{
+            {token ? <Tab.Screen options={{
                 headerShown: false, tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="account-edit" size={24} color="white" />
                 ),

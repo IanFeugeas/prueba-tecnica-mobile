@@ -3,63 +3,50 @@ import { Text, View, StyleSheet, TextInput, Image, ScrollView, Dimensions, Touch
 import axios from 'axios'
 import { useNavigation } from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay';
+import contactsActions from '../store/Contacts/actions'
+import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+
 function AddContact() {
+    const { create_contact } = contactsActions
     const [loading, setLoading] = useState(false);
     const [name, setName] = useState(" ");
-    const [lastName, setLastName] = useState(" ");
+    const [last_name, setLastName] = useState(" ");
     const [phone, setPhone] = useState(" ")
     const [email, setEmail] = useState(" ");
     const [date, setDate] = useState(" ");
     const [address, setAddress] = useState(" ");
     const [type, setType] = useState(" ");
     const [origin, setOrigin] = useState(" ")
+    const dispatch = useDispatch()
+    let [token,setToken] = useState('')
 
     const navigation = useNavigation()
 
-    async function handleAdd() {
-        setLoading(true)
-
-        let data = {
-            name: name,
-            email: email,
-            last_name: lastName,
-            phone: phone,
-            date: date,
-            address: address,
-            type_of_contact: type,
-            origin: origin
-
-        }
-
-        let url = 'https://prueba-tecnica-minicrm.onrender.com/contacts/add'
-        try {
-            await axios.post(url, data)
-            setLoading(false)
-            alert('Contacto agregado correctamente');
-            console.log('Add contact Successful')
-            setTimeout(() => navigation.navigate('Clientes'), 4000)
-        } catch (error) {
-            setLoading(false)
-            console.log(error)
-        }
-    }
-
     async function handleReturn(){
-        setTimeout( () => {
             navigation.navigate('Clientes');
-        }, 100)
+    }
+    async function handleAdd(){
+        let body = { name, last_name, phone, email, date, address, type, origin }
+        const token = await AsyncStorage.getItem('token');
+        let headers = { headers: { 'Authorization': `Bearer ${token}` } }
+        dispatch(create_contact({body, headers}))
+        setTimeout( () => {
+            navigation.navigate("Clientes");
+        }, 3000)
     }
 
     return (
-        <ScrollView style={styles.register}>
-            <View style={styles.registerContent}>
+        <ScrollView style={styles.addForm}>
+            <View style={styles.addContent}>
                 <View style={styles.welcomeSection}>
                     <Text style={styles.welcomeSectionH2}>Nuevo contacto</Text>
-                    <Text style={styles.welcomeSectionP}>Son obligatorios los campos que tengan " * "</Text>
+                    <Text style={styles.welcomeSectionP}>Son obligatorios los campos que contengan " * "</Text>
                 </View>
                 <View style={styles.form}>
 
@@ -70,11 +57,11 @@ function AddContact() {
 
                     <View style={styles.fieldset}>
                         <Text style={styles.legend}>Apellidos *</Text>
-                        <TextInput name="lastName" id="lastName" style={styles.input} onChangeText={inputText => setLastName(inputText)} />
+                        <TextInput name="last_name" id="last_name" style={styles.input} onChangeText={inputText => setLastName(inputText)} />
                     </View>
 
                     <View style={styles.fieldset}>
-                        <Text style={styles.legend}>E-mail</Text>
+                        <Text style={styles.legend}>E-mail *</Text>
                         <TextInput name="email" id="email" style={styles.input} onChangeText={inputText => setEmail(inputText)} />
                     </View>
 
@@ -84,18 +71,13 @@ function AddContact() {
                     </View>
 
                     <View style={styles.fieldset}>
-                        <Text style={styles.legend}>Fecha de nacimiento</Text>
+                        <Text style={styles.legend}>Fecha de nacimiento *</Text>
                         <TextInput name="date" id="date" style={styles.input} onChangeText={inputText => setDate(inputText)} />
                     </View>
 
                     <View style={styles.fieldset}>
                         <Text style={styles.legend}>Direccion</Text>
                         <TextInput name="address" id="address" style={styles.input} onChangeText={inputText => setAddress(inputText)} />
-                    </View>
-
-                    <View style={styles.fieldset}>
-                        <Text style={styles.legend}></Text>
-                        <TextInput name="date" id="date" style={styles.input} onChangeText={inputText => setDate(inputText)} />
                     </View>
 
                     <View style={styles.fieldset}>
@@ -107,7 +89,7 @@ function AddContact() {
                         <Text style={styles.legend}>Origen</Text>
                         <TextInput name="origin" id="origin" style={styles.input} onChangeText={inputText => setOrigin(inputText)} />
                     </View>
-                    <View>
+                    <View style={styles.btnAdd}>
                         <TouchableOpacity style={styles.add} onPress={handleReturn}><Text style={styles.addText} >Cancelar</Text ></TouchableOpacity>
 
                         <TouchableOpacity style={styles.add} onPress={handleAdd}><Text style={styles.addText} >Agregar</Text ></TouchableOpacity>
@@ -124,12 +106,11 @@ function AddContact() {
 }
 
 const styles = StyleSheet.create({
-    register: {
+    addForm: {
         width: windowWidth,
         height: windowHeight,
-        paddingTop: '50%'
     },
-    registerContent: {
+    addContent: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -195,8 +176,15 @@ const styles = StyleSheet.create({
         marginLeft: 15,
         height: 25
     },
+    btnAdd: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 50
+    },
     add: {
-        width: '100%',
+        width: 160,
         height: 48,
         backgroundColor: '#1E90FF',
         borderRadius: 10,
