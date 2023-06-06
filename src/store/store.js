@@ -4,6 +4,7 @@ import textReducer from "./SearchBar/reducer"
 import contactReducer from "./Contacts/reducer"
 import contactClickReducer from './ContactClicked/reducer'
 import oneContactReducer from "./OneContact/reducer"
+import detailsClickReducer from './DetailsClicked/reducer'
 
 export const store = configureStore({
     reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
         text: textReducer,
         contacts: contactReducer,
         contactClickReducer: contactClickReducer,
-        oneContact: oneContactReducer
+        oneContact: oneContactReducer,
+        detailsClickReducer: detailsClickReducer
     }
 })

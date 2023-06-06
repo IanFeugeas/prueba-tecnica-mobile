@@ -10,12 +10,14 @@ import { StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native'
 import { useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native';
-import contactClickActions from "../store/Contacts/actions"
+import contactClickActions from "../store/ContactClicked/action"
+import detailsClickActions from '../store/DetailsClicked/actions'
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 
 const { read_contacts, delete_contacts } = contactsActions
 const { contactClicked } = contactClickActions
+const { detailsClicked } = detailsClickActions
 
 function ContactsCards() {
     let contacts = useSelector(store => store.contacts.contacts)
@@ -44,21 +46,30 @@ function ContactsCards() {
     const navigation = useNavigation()
 
     function handleDetails(e, id) {
-            navigation.navigate('Informacion');
+        dispatch(detailsClicked({state: true}))
+        setTimeout( () => {
+        navigation.navigate('Informacion', { id });
+    }, 1000)
     }
 
-    function handleEdit(id) {
-      navigation.navigate('Editar', {id});   
+    function handleEdit(e, id) {
+      dispatch(contactClicked({state: true}))
+      setTimeout( () => {
+      navigation.navigate('Editar', { id });   
+    }, 1000)
     }
 
     function handleNavigate(e) {
             navigation.navigate('Agregar');
     }
 
-    async function handleDelete(id){
+    async function handleDelete(e, id){
         const token = await AsyncStorage.getItem('token');
         let headers = { headers: { 'Authorization': `Bearer ${token}` } }
         dispatch(delete_contacts({id, headers}))
+        alert('Contacto eliminado correctamente');
+        console.log('Delete contact Successful')
+        setTimeout(() => navigation.navigate('Clientes'), 1000)
     }
 
     useEffect( () => {
@@ -82,8 +93,8 @@ function ContactsCards() {
             {
                 contacts.length ? contacts.map((contact, i) => {
                     let card =
-                    <ScrollView>
-                        <View style={styles.card} key={i}>
+                    <ScrollView key={contact._id}>
+                        <View style={styles.card} >
                             <View style={styles.cardText}>
                                 <View className='text' style={styles.info}>
                                     <View style={styles.name}>
@@ -91,13 +102,13 @@ function ContactsCards() {
                                         <Text style={styles.phone}>{contact.phone}</Text>
                                     </View>
                                     <View style={styles.bottom}>
-                                        <TouchableOpacity style={styles.cardBtn} onPress={() => handleEdit(contact._id)}>
+                                        <TouchableOpacity style={styles.cardBtn} onPress={(event) => handleEdit(event, contact._id)}>
                                             <MaterialIcons name="edit" size={20} color='#1E90FF' />
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.cardBtn} onPress={(event) => handleDetails(event, contact._id)}>
                                             <MaterialCommunityIcons name="checkbox-marked-circle-plus-outline" size={20} color='#1E90FF' />
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={styles.cardBtn} onPress={() => handleDelete(contact._id)}>
+                                        <TouchableOpacity style={styles.cardBtn} onPress={(event) => handleDelete(event, contact._id)}>
                                             <MaterialCommunityIcons name="trash-can" size={20} color='#1E90FF' />
                                         </TouchableOpacity>
                                     </View>

@@ -16,7 +16,7 @@ const windowHeight = Dimensions.get('window').height;
 
 function ContactDetails() {
     const route = useRoute();
-    const contactId = route.params.contactId;
+    const id = route.params.id;
     const dispatch = useDispatch()
     let contact = useSelector(store => store.contacts.contact)
 
@@ -30,11 +30,11 @@ function ContactDetails() {
             }
         }
         getData();
-    }, [contactId]));
+    }, [id]));
 
     function getContact(token) {
         let headers = { headers: { 'Authorization': `Bearer ${token}` } }
-        dispatch(read_contact({ contact_id: contactId, headers: headers }))
+        dispatch(read_contact({ id, headers: headers }))
     }
 
     return (
@@ -69,4 +69,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default MangaDetails
+export default ContactDetails

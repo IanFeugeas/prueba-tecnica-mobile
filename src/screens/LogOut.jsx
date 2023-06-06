@@ -7,12 +7,15 @@ import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import bottomTabsActions from '../store/ReloadBottomTabs/actions';
+import contactClickActions from '../store/ContactClicked/action';
+import detailsClickActions from '../store/DetailsClicked/actions';
 import { StyleSheet } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 
-
 const { reloadBottomTabs } = bottomTabsActions
+const { contactClicked } = contactClickActions
+const { detailsClicked } = detailsClickActions
 
 function Logout() {
   const [loading, setLoading] = useState(false);
@@ -33,8 +36,10 @@ function Logout() {
         AsyncStorage.removeItem('user')
         console.log('Logout')
         dispatch(reloadBottomTabs({ state: !state }))
+        dispatch(contactClicked({ state: false }))
+        dispatch(detailsClicked({state: false}))
         setLoading(false)
-        setTimeout(() => navigation.navigate('Home'), 1000)
+        setTimeout(() => navigation.navigate('Home'), 5000)
       } catch (error) {
         console.log(error);
       }
@@ -44,9 +49,9 @@ function Logout() {
 
   return (
     <ScrollView>
-      <View style={styles.mangaBtn}>
-        <Text style={styles.btnText}>You are beeing logged out</Text>
-        <Text style={styles.btnText}>Please wait</Text>
+      <View style={styles.logout}>
+        <Text style={styles.btnText}>Te estas desconectando</Text>
+        <Text style={styles.btnText}>Aguarde unos segundos!</Text>
       </View>
       <Spinner visible={loading} />
     </ScrollView>
@@ -59,19 +64,9 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingTop: 400
   },
-  mangaBtn: {
-        width: 300,
-        height: 100,
-        backgroundColor: '#F9A8D4',
-        borderRadius: 6,
-        borderWidth: 0,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center', 
-        elevation: 5,
-        gap: 10,
-    },
+  
     btnText: {
         color: '#FFFFFF',
         fontWeight: '700',

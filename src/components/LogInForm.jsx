@@ -6,10 +6,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import bottomTabsActions from '../store/ReloadBottomTabs/actions';
+import contactClickActions from "../store/ContactClicked/action";
 import axios from "axios";
 import Spinner from 'react-native-loading-spinner-overlay';
 
 const { reloadBottomTabs } = bottomTabsActions
+const { contactClicked } = contactClickActions
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -43,6 +45,7 @@ function LoginForm({ setRender }){
                     email: res.data.user.email,
                 }))
                 dispatch(reloadBottomTabs({ state: !state }))
+                dispatch(contactClicked({ state: false}))
                 setLoading(false)
                 setTimeout(() => navigation.navigate('Home'), 1000)
             })

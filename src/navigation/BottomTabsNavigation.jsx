@@ -14,6 +14,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import {AntDesign} from '@expo/vector-icons'; 
 import AddContact from '../screens/AddContact';
 import EditContact from '../screens/EditContact';
+import ContactDetails from '../screens/ContactDetails';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const Tab = createBottomTabNavigator()
@@ -23,6 +24,7 @@ function BottomTabsNavigation() {
 
     let state = useSelector(store => store.bottomTabsReducer.state)
     let contactClicked = useSelector(store => store.contactClickReducer.state)
+    let detailsClicked = useSelector(store => store.detailsClickReducer.state)
 
     useFocusEffect(React.useCallback(() => {
         async function getData() {
@@ -34,7 +36,7 @@ function BottomTabsNavigation() {
             }
         }
         getData();
-    }, [state, contactClicked]));
+    }, [state, contactClicked, detailsClicked]));
 
     return (
         <Tab.Navigator screenOptions={{
@@ -81,7 +83,7 @@ function BottomTabsNavigation() {
                 ),
             }} name='Clientes' component={Contacts} /> : <></>}
 
-            {token && contactClicked ? <Tab.Screen options={{
+            {token && detailsClicked ? <Tab.Screen options={{
                 headerShown: false, tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="account-details" size={24} color="white" />
                 ),
@@ -93,7 +95,7 @@ function BottomTabsNavigation() {
                 ),
             }} name='Agregar' component={AddContact} /> : <></>}
 
-            {token ? <Tab.Screen options={{
+            {token && contactClicked ? <Tab.Screen options={{
                 headerShown: false, tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="account-edit" size={24} color="white" />
                 ),

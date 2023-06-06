@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Text, View, StyleSheet, TextInput, Image, ScrollView, Dimensions, TouchableOpacity } from "react-native";
-import axios from 'axios'
 import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -14,16 +13,13 @@ const windowHeight = Dimensions.get('window').height;
 function EditContact() {
     const { edit_contact } = contactsActions
     const route = useRoute();
-    const contactId = route.params.id;
+    const id = route.params.id;
     const [loading, setLoading] = useState(false);
     const [name, setName] = useState(" ");
     const [last_name, setLastName] = useState(" ");
     const [phone, setPhone] = useState(" ")
     const [email, setEmail] = useState(" ");
     const [date, setDate] = useState(" ");
-    const [address, setAddress] = useState(" ");
-    const [type, setType] = useState(" ");
-    const [origin, setOrigin] = useState(" ")
     const dispatch = useDispatch()
     let [token,setToken] = useState('')
 
@@ -51,18 +47,6 @@ function EditContact() {
       
         if (date !== " ") {
           editedData.date = date;
-        }
-      
-        if (address !== " ") {
-          editedData.address = address;
-        }
-      
-        if (type !== " ") {
-          editedData.type = type;
-        }
-      
-        if (origin !== " ") {
-          editedData.origin = origin;
         }
       
         const token = await AsyncStorage.getItem('token');
@@ -131,7 +115,7 @@ function EditContact() {
                     <View style={styles.btnEdit}>
                         <TouchableOpacity style={styles.add} onPress={handleReturn}><Text style={styles.addText} >Cancelar</Text ></TouchableOpacity>
 
-                        <TouchableOpacity style={styles.add} onPress={() => handleEdit(contactId)}><Text style={styles.addText} >Guardar</Text ></TouchableOpacity>
+                        <TouchableOpacity style={styles.add} onPress={() => handleEdit(id)}><Text style={styles.addText} >Guardar</Text ></TouchableOpacity>
                     </View>
                     
             

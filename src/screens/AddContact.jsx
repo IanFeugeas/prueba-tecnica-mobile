@@ -32,13 +32,13 @@ function AddContact() {
             navigation.navigate('Clientes');
     }
     async function handleAdd(){
-        let body = { name, last_name, phone, email, date, address, type, origin }
+        let body = { name, last_name, phone, email, date }
         const token = await AsyncStorage.getItem('token');
         let headers = { headers: { 'Authorization': `Bearer ${token}` } }
         dispatch(create_contact({body, headers}))
         setTimeout( () => {
             navigation.navigate("Clientes");
-        }, 3000)
+        }, 4000)
     }
 
     return (
