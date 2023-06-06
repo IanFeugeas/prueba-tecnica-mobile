@@ -17,7 +17,7 @@ npm install -g expo-cli
 Clona este repositorio en tu máquina local o descarga el código fuente.
 
 bash:
-git clone <URL del repositorio>
+git clone https://github.com/IanFeugeas/prueba-tecnica-mobile.git
 
 Navega hasta el directorio raíz de la aplicación.
 bash:
@@ -29,7 +29,7 @@ npm install
 
 Inicia el servidor de desarrollo de Expo.
 bash:
-expo start
+npm start
 
 Esto abrirá una ventana del navegador con la interfaz de Expo DevTools.
 
