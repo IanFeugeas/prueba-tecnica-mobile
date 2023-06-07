@@ -48,7 +48,7 @@ function ContactsCards() {
     function handleDetails(e, id) {
         dispatch(detailsClicked({state: true}))
         setTimeout( () => {
-        navigation.navigate('Informacion', { id });
+        navigation.navigate('Informacion', {id: id });
     }, 1000)
     }
 

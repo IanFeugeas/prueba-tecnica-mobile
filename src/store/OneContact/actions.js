@@ -3,9 +3,10 @@ import axios from "axios";
 
 const read_contact = createAsyncThunk(
     'read_contact',
-    async ({ contact_id, headers }) => {
+    async ({ id, headers }) => {
         try {
-            let response = await axios.get("https://prueba-tecnica-minicrm.onrender.com/contacts/" + contact_id, headers)
+            let response = await axios.get("https://prueba-tecnica-minicrm.onrender.com/contacts/" + id, headers)
+            
             return { contact: response.data.contact }
         } catch (error) {
             return { contact: [] }

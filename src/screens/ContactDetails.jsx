@@ -34,7 +34,7 @@ function ContactDetails() {
 
     function getContact(token) {
         let headers = { headers: { 'Authorization': `Bearer ${token}` } }
-        dispatch(read_contact({ id, headers: headers }))
+        dispatch(read_contact({id: id, headers: headers }))
     }
 
     return (
